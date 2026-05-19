@@ -1,9 +1,12 @@
 import { CardSim,Search,ChevronDown } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const Products = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-[oklch(0.98_0.001_0)]">
          {/* Header */}
@@ -13,7 +16,7 @@ const Products = () => {
             GlobalSim
           </Link>
           <div className="flex items-center gap-4">
-            <button variant="ghost" size="sm" className='text-md font-medium border border-[oklch(0.93_0.002_0)] h-8 rounded-md gap-1.5 px-3'>
+            <button onClick={() => navigate('/profile')} variant="ghost" size="sm" className='text-md font-medium border border-[oklch(0.93_0.002_0)] h-8 rounded-md gap-1.5 px-3'>
               Account
             </button>
             <button size="sm" className="h-8 rounded-md gap-1.5 px-3 bg-[oklch(0.45_0.21_262)] text-white font-medium text-md hover:bg-primary/90">
@@ -26,7 +29,7 @@ const Products = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
              {/* Page Header */}
         <div className="mb-12">
-          <h1 className="text-5xl font-bold text-[oklch(0.15_0_0)] mb-3">Choose Your SIM Card</h1>
+          <h1 className="text-3xl font-bold text-[oklch(0.15_0_0)] mb-3">Choose Your SIM Card</h1>
           <p className="text-lg text-[oklch(0.15_0_0)]/60">
             Select from our wide range of international SIM cards and stay connected worldwide
           </p>

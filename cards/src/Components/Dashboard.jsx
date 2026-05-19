@@ -107,7 +107,7 @@ const Dashboard = () => {
           <p className="text-lg text-[oklch(0.15_0_0)]/70 max-w-2xl mx-auto mb-8">
             Get your international SIM card today and enjoy seamless connectivity wherever you go.
           </p>
-          <button size="lg" className="bg-[oklch(0.45_0.21_262)] font-medium h-10 rounded-md px-6 hover:bg-primary/90 text-white group inline-flex items-center justify-center gap-2">
+          <button onClick={() => navigate('/products')} size="lg" className="bg-[oklch(0.45_0.21_262)] font-medium h-10 rounded-md px-6 hover:bg-primary/90 text-white group inline-flex items-center justify-center gap-2">
             Browse SIM Cards <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
