@@ -7,6 +7,7 @@ import Signup from './Auth/Signup'
 import Profile from './Auth/Profile'
 import Cart from './Shop/Cart'
 import Verify from './Management/Verify'
+import Timer from './Components/Timer'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/cart' element={<Cart/>}/>
             <Route path='/verify' element={<Verify/>}/>
+            <Route path='/initialization' element={<Timer/>}/>
         </Routes>
     </BrowserRouter>
   )

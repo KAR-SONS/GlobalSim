@@ -89,16 +89,7 @@ const Signup = () => {
                     className="px-3 py-1 border border-blue-200 focus:ring-blue-500 focus:border-blue-500 rounded-lg h-10 text-black"
                   />
                 </div>
-                <div className="grid gap-2">
-                  <label className="text-sm font-semibold text-black">Confirm Password</label>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    className="px-3 py-1 border border-blue-200 focus:ring-blue-500 focus:border-blue-500 rounded-lg h-10 text-black"
-                  />
-                </div>
+              
                 <button
                   type="submit"
                   className="w-full bg-blue-800 hover:bg-blue-600 text-white font-bold h-11 rounded-lg"
