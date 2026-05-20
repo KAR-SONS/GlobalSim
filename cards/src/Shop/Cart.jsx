@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CardSim, Trash2Icon } from 'lucide-react'
 import { supabase } from "../supabaseClient";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
+  const BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+  const CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
 
   useEffect(() => {
     fetchCart();
@@ -85,6 +89,69 @@ const Cart = () => {
     else await refreshCart();
   }
 
+  const handleCheckout = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    // TOTAL
+    const totalAmount = cart.reduce(
+      (sum, item) =>
+        sum + Number(item.products.price),
+      0
+    );
+
+    const { data: order, error: orderError } = await supabase
+      .from("orders")
+      .insert({
+        user_id: user.id,
+        total_amount: totalAmount,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (orderError) {
+      console.error(orderError.message);
+      return;
+    }
+
+    alert("Order created successfully");
+
+    const telegramMessage = `
+      🛒 New GlobalSim Order
+
+      Order ID: ${order.id}
+      Amount: KES ${totalAmount}
+
+      User: ${user.email}
+      `;
+
+    // Telegram Notification
+    await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: telegramMessage,
+        }),
+      }
+    );
+
+    // NEXT:
+    // initiate MPesa STK push here
+    window.location.href = `https://lipana.dev/pay/globalsims`;
+  };
+
   return (
     <div className="min-h-screen flex flex-col max-w-5xl mx-auto px-4 py-10">
 
@@ -140,7 +207,7 @@ const Cart = () => {
       {cart.length > 0 && (
         <div className="sticky bottom-0 left-0 right-0 z-10 w-full bg-[oklch(0.98_0.001_0)]/95 backdrop-blur border-t border-[oklch(0.93_0.002_0)] py-4">
           <div className="max-w-5xl mx-auto px-4">
-            <button className="w-full bg-blue-500 text-white font-semibold py-3 px-4 hover:bg-blue-600 transition-colors rounded-lg shadow-lg">
+            <button  onClick={handleCheckout} className="w-full bg-blue-500 text-white font-semibold py-3 px-4 hover:bg-blue-600 transition-colors rounded-lg shadow-lg">
               Checkout <span className="text-xl ml-2">Ksh {cart.reduce((sum, item) => sum + Number(item.products.price), 0).toFixed(2)}</span>
             </button>
           </div>

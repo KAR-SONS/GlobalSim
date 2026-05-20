@@ -1,15 +1,20 @@
 import React, {useEffect,useState} from 'react'
 import { Link } from 'react-router-dom'
-import { CardSim } from 'lucide-react'
+import { CardSim, Copy } from 'lucide-react'
 import {supabase} from '../supabaseClient'
 import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    fetchOrders();
   }, []);
 
   const fetchProfile = async () => {
@@ -37,6 +42,45 @@ const Profile = () => {
 
     setProfile(data);
   };
+
+  const fetchOrders = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("order_items")
+      .select(`
+        id,
+        order_id,
+        products (
+          id,
+          name,
+          dollars,
+          price,
+          data,
+          airtime,
+          code
+        ),
+        orders (
+          id,
+          status,
+          total_amount,
+          user_id
+        )
+      `)
+      .eq("orders.user_id", user.id);
+
+    if (error) {
+      console.log(error.message);
+      return;
+    }
+
+    setItems(data);
+  };
+
 
   return (
      <div className="min-h-screen bg-[oklch(0.98_0.001_0)]">
@@ -76,31 +120,36 @@ const Profile = () => {
             SIM cards you've purchased will appear here.
           </p>
         </div>
-
+          {items.length === 0 ? (
+            <p>No purchases yet</p>
+          ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-         <div className="card rounded-lg bg-[oklch(1_0_0)] border border-[oklch(0.93_0.002_0)] hover:border-primary/50 overflow-hidden transition-all hover:shadow-lg group cursor-pointer h-full flex flex-col">
+           {items.map((item) => (
+          <div  key={item.id} className="card rounded-lg bg-[oklch(1_0_0)] border border-[oklch(0.93_0.002_0)] hover:border-primary/50 overflow-hidden transition-all hover:shadow-lg group cursor-pointer h-full flex flex-col">
          <div className='flex items-center justify-center p-2'>
             <div className="bg-[oklch(0.45_0.21_262)]/10 w-18 h-18 rounded-lg flex items-center justify-center mb-4 transition-colors">
               <CardSim className="w-20 h-20 p-4 text-blue-900" />
             </div>
-            </div>
             <div className="px-4 py-2 flex-1 flex flex-col">
-              <h3 className="text-lg font-semibold text-[oklch(0.15_0_0)] mb-1">Airtel Zambia Sim</h3>
+              <h3 className="text-lg font-semibold text-[oklch(0.15_0_0)] mb-1">{item.products?.name}</h3>
               <p className="text-md font-medium text-[oklch(0.15_0_0)]/60 mb-4 flex-1">
-                5GB Data | 100 Mins 
+                {item.products?.data} | {item.products?.airtime}
               </p>
               <div className="mt-auto">
-                <p className="text-lg font-bold text-[oklch(0.45_0.21_262)] mb-2">$2.99 | Kes 300</p>
-                <button size="sm" className="w-full h-8 rounded-md bg-[oklch(0.45_0.21_262)] text-white font-medium hover:bg-primary/90">
-                  Add to Cart
-                </button>
+                <p className="text-lg font-bold text-[oklch(0.45_0.21_262)] mb-2">$ {item.products?.dollars} | KES {item.products?.price}</p>
+                <div className='flex gap-4'>
+                 <h4 className='font-semibold text-xl underline decoration-dotted underline-offset-2'>{item.products?.code}</h4>
+                 <Copy className="w-5 h-5 text-[oklch(0.15_0_0)]/60 cursor-pointer mt-1" onClick={() => navigator.clipboard.writeText(item.products?.code)} />
+                 </div>
               </div>
             </div>
             </div>
         </div>
-
-        </div>
+           ))}
      </div>
+          )}
+    </div>
+    </div>
   )
 }
 

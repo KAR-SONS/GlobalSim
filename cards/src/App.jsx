@@ -6,6 +6,7 @@ import Login from './Auth/Login'
 import Signup from './Auth/Signup'
 import Profile from './Auth/Profile'
 import Cart from './Shop/Cart'
+import Verify from './Management/Verify'
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
             <Route path='/signup' element={<Signup/>}/>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/cart' element={<Cart/>}/>
+            <Route path='/verify' element={<Verify/>}/>
         </Routes>
     </BrowserRouter>
   )
