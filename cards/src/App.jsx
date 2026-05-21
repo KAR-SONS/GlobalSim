@@ -8,6 +8,7 @@ import Profile from './Auth/Profile'
 import Cart from './Shop/Cart'
 import Verify from './Management/Verify'
 import Timer from './Components/Timer'
+import CodeGenerator from './Management/CodeGenerator'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route path='/cart' element={<Cart/>}/>
             <Route path='/verify' element={<Verify/>}/>
             <Route path='/initialization' element={<Timer/>}/>
+            <Route path='/code' element={<CodeGenerator/>}/>
         </Routes>
     </BrowserRouter>
   )
