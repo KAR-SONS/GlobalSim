@@ -98,7 +98,7 @@ export default function Timer() {
         </button>
     </div>
     ) : (
-    <div className="mt-6">
+    <div className="mt-6 text-center text-gray-400">
         <h4>After the Timer Expires Your Number will be generated.</h4>
     </div>
     )}

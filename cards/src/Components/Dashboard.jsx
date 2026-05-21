@@ -74,7 +74,7 @@ const Dashboard = () => {
             </div>
             <h3 className="text-lg font-semibold text-[oklch(0.15_0_0)] mb-2">Global Coverage</h3>
             <p className="text-md font-medium text-[oklch(0.15_0_0)]/60">
-              Works in 200+ countries with local networks. No roaming charges, always local rates.
+              Works in 20+ countries with local networks. No roaming charges, always local rates.
             </p>
           </div>
           <div className="card bg-[oklch(1_0_0)] border border-[oklch(0.45_0.21_262)]/50 rounded-lg p-8 hover:border-primary/50 transition-colors group">

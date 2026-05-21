@@ -10,12 +10,12 @@ const Verify = () => {
     }, [])
 
     const handleVerify = async (order) => {
+        if (!order?.id) {
+            console.error("Order missing id", order)
+            return
+        }
 
-        const {
-            data: { user }
-            } = await supabase.auth.getUser();
-
-            if (!order.user_id) {
+        if (!order.user_id) {
             console.error("Order missing user_id", order)
             return
         }
@@ -23,7 +23,7 @@ const Verify = () => {
         const { data: cartItems, error: cartError } = await supabase
             .from("cart_items")
             .select("product_id")
-            .eq("user_id", user.id)
+            .eq("user_id", order.user_id)
 
         if (cartError) {
             console.log(cartError)
