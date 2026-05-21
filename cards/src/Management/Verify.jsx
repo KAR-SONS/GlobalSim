@@ -30,11 +30,6 @@ const Verify = () => {
             return
         }
 
-        if (!cartItems?.length) {
-            console.log("No cart items found for this order user")
-            return
-        }
-
         // MARK PRODUCTS INACTIVE
         for (const item of cartItems) {
             await supabase
