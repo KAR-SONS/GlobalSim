@@ -16,17 +16,11 @@ const Navbar = () => {
             <span className="text-2xl font-bold text-[oklch(0.15_0_0)]">GlobalSim</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <Link to="#" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
+            <Link to="/products" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
               Products
             </Link>
-            <Link to="#" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
+            <Link to="/products" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
               Pricing
-            </Link>
-            <Link to="#" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
-              About
-            </Link>
-            <Link to="#" className="text-sm text-[oklch(0.15_0_0)]/70 hover:text-foreground transition">
-              Support
             </Link>
           </div>
           <div className="flex items-center gap-3">
