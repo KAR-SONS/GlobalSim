@@ -20,18 +20,24 @@ const Verify = () => {
             return
         }
 
-        const { data: cartItems, error: cartError } = await supabase
-            .from("cart_items")
+        const { data: orderItems, error: orderItemsError } = await supabase
+            .from("order_items")
             .select("product_id")
-            .eq("user_id", order.user_id)
+            .eq("order_id", order.id)
 
-        if (cartError) {
-            console.log(cartError)
+
+        if (orderItemsError) {
+            console.log(orderItemsError)
             return
         }
 
+        if (!orderItems?.length) {
+            console.log("No order items found")
+            return
+}
+
         // MARK PRODUCTS INACTIVE
-        for (const item of cartItems) {
+        for (const item of orderItems) {
             await supabase
                 .from("products")
                 .update({ is_active: false })
