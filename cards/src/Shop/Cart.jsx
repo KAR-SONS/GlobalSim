@@ -90,12 +90,18 @@ const Cart = () => {
   }
 
   const handleCheckout = async () => {
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
       navigate("/login");
+      return;
+    }
+
+    if (!cart.length) {
+      alert("Cart is empty");
       return;
     }
 
@@ -106,6 +112,7 @@ const Cart = () => {
       0
     );
 
+    // CREATE ORDER
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
@@ -121,18 +128,35 @@ const Cart = () => {
       return;
     }
 
-    alert("Order created successfully");
+    // CREATE ORDER ITEMS (IMPORTANT FIX)
+    const orderItems = cart.map((item) => ({
+      order_id: order.id,
+      product_id: item.products.id,
+    }));
 
+    const { error: orderItemsError } = await supabase
+      .from("order_items")
+      .insert(orderItems);
+
+    if (orderItemsError) {
+      console.error("ORDER ITEMS ERROR:", orderItemsError);
+      return;
+    }
+
+    // TELEGRAM MESSAGE
     const telegramMessage = `
-      🛒 New GlobalSim Order
+  🛒 New GlobalSim Order
 
-      Order ID: ${order.id}
-      Amount: KES ${totalAmount}
+  Order ID: ${order.id}
+  Amount: KES ${totalAmount}
 
-      User: ${user.email}
-      `;
+  User: ${user.email}
 
-    // Telegram Notification
+  Products:
+  ${cart.map((item) => `- ${item.products.name}`).join("\n")}
+  `;
+
+    // SEND TELEGRAM NOTIFICATION
     await fetch(
       `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
       {
@@ -147,8 +171,9 @@ const Cart = () => {
       }
     );
 
-    // NEXT:
-    // initiate MPesa STK push here
+    alert("Order created successfully");
+
+    // REDIRECT TO PAYMENT
     window.location.href = `https://lipana.dev/pay/globalsims`;
   };
 

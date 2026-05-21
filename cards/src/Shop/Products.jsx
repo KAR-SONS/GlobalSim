@@ -67,72 +67,51 @@ const Products = () => {
     return matchesRegion && matchesSearch;
   });
 
-  const handleCheckout = async () => {
+  const handleAddToCart = async (product) => {
+    const { data: { user } } = await supabase.auth.getUser();
 
-    const {
-        data: { user }
-    } = await supabase.auth.getUser();
-
-    if (!user) return;
-
-    // GET USER CART
-    const { data: cartItems, error: cartError } = await supabase
-        .from("cart_items")
-        .select(`
-            product_id,
-            products (
-                price
-            )
-        `)
-        .eq("user_id", user.id);
-
-    if (cartError || !cartItems.length) {
-        console.log(cartError || "No cart items");
-        return;
+    if (!user) {
+      navigate("/login");
+      return;
     }
 
-    // TOTAL
-    const totalAmount = cartItems.reduce(
-        (sum, item) => sum + Number(item.products.price),
-        0
-    );
-
-    // CREATE ORDER
-    const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert([
-            {
-                user_id: user.id,
-                total_amount: totalAmount,
-                status: "pending",
-            },
-        ])
-        .select()
+    try {
+      // check if item exists (no quantity concept)
+      const { data: existing, error: existErr } = await supabase
+        .from('cart_items')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('product_id', product.id)
         .single();
 
-    if (orderError) {
-        console.log(orderError);
+      if (existErr && existErr.code !== 'PGRST116') {
+        // PGRST116 is 'row not found' for single(); treat as not found
+        console.error(existErr.message || existErr);
         return;
-    }
+      }
 
-    // CREATE ORDER ITEMS
-    const orderItems = cartItems.map((item) => ({
-        order_id: order.id,
-        product_id: item.product_id,
-    }));
-
-    const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems);
-
-    if (itemsError) {
-        console.log("ORDER ITEMS ERROR:", itemsError);
+      if (existing && existing.id) {
+        // already in cart — optionally navigate to cart
+        navigate('/cart');
         return;
-    }
+      }
 
-    // REDIRECT TO PAYMENT
-    window.location.href = "https://lipana.dev/pay/globalsims";
-};
+      const { error: insErr } = await supabase
+        .from('cart_items')
+        .insert({ user_id: user.id, product_id: product.id });
+
+      if (insErr) {
+        console.error(insErr.message || insErr);
+        return;
+      }
+
+      // update local counter
+      setCartCount((c) => c + 1);
+      try { window.dispatchEvent(new CustomEvent('cart-updated', { detail: { total: cartCount + 1 } })); } catch(e){}
+    } catch (err) {
+      console.error(err?.message || err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[oklch(0.98_0.001_0)]">
