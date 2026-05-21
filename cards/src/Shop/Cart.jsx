@@ -132,6 +132,7 @@ const Cart = () => {
     const orderItems = cart.map((item) => ({
       order_id: order.id,
       product_id: item.products.id,
+       price: Number(item.products.price),
     }));
 
     const { error: orderItemsError } = await supabase
