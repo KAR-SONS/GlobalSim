@@ -153,6 +153,8 @@ const Cart = () => {
 
   User: ${user.email}
 
+  Verify payment here : https://globalsim.top/verify
+
   Products:
   ${cart.map((item) => `- ${item.products.name}`).join("\n")}
   `;

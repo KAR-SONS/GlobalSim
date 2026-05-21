@@ -26,7 +26,7 @@ const Dashboard = () => {
               <button onClick={() => navigate('/products')} size="lg" className="h-10 rounded-md px-6 bg-[oklch(0.45_0.21_262)] hover:bg-primary/90 font-medium text-white group inline-flex items-center justify-center gap-2">
                 Shop Now <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button size="lg" variant="outline" className='h-10 rounded-md px-6 border bg-background shadow-xs dark:bg-input/30 font-medium dark:border-input dark:hover:bg-input/50'>
+              <button onClick={() => navigate('/products')} size="lg" variant="outline" className='h-10 rounded-md px-6 border bg-background shadow-xs dark:bg-input/30 font-medium dark:border-input dark:hover:bg-input/50'>
                 Learn More
               </button>
             </div>

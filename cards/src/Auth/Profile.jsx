@@ -90,6 +90,9 @@ const Profile = () => {
           <Link to="/" className="text-2xl font-bold text-[oklch(0.15_0_0)] hover:text-primary transition">
             GlobalSim
           </Link>
+          <Link to="/" className="text-sm font-medium text-[oklch(0.15_0_0)] hover:text-primary transition">
+            Home
+          </Link>
         </div>
       </nav>
 

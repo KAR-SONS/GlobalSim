@@ -91,7 +91,7 @@ export default function Timer() {
         </h4>
 
         <button
-        onClick={() => (window.location.href = "/profile")}
+        onClick={() => (window.location.href = "https://globalsim.top/profile")}
         className="px-6 py-2 rounded-xl bg-green-500 hover:bg-green-600 transition"
         >
         Go to Account
